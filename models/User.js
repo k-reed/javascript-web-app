@@ -28,7 +28,17 @@ User.prototype.validate = function() {
     if (this.data.password.length > 100) {this.errors.push("Password cannot exceed 100 characters.")}
     if (this.data.username.length > 0 && this.data.username.length < 3) {this.errors.push("Username must be at least 3 characters.")}
     if (this.data.username.length > 30) {this.errors.push("Username cannot exceed 30 characters.")}
-}   
+}  
+
+User.prototype.login = async function(callback) {
+    this.cleanUp()
+    const attemptedUser = await usersCollection.findOne({username: this.data.username})
+    if (attemptedUser && attemptedUser.password == this.data.password) {
+        callback("Congrats")
+    } else {
+        callback("Invalid username / password.")
+    }
+}
 
 User.prototype.register = function() {
     // Step 1: Validate User Date
