@@ -7,6 +7,11 @@ const sanitizeHTML = require('sanitize-html')
 const csrf = require('csurf')
 const app = express()
 
+app.use(express.urlencoded({extended: false})) // allows HTML form submits
+app.use(express.json()) // allows JSON readability
+
+app.use('/api', require('./router-api'))
+
 let sessionOptions = session({
     secret: "JavaScript is sooooo cool",
     store: MongoStore.create({client: require('./db')}),
@@ -38,9 +43,6 @@ app.use(function(req, res, next) {
 })
 
 const router = require('./router')
-
-app.use(express.urlencoded({extended: false})) // allows HTML form submits
-app.use(express.json()) // allows JSON readability
 
 app.use(express.static('public'))
 app.set('views', 'views')
